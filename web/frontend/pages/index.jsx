@@ -1,85 +1,65 @@
-import {
-  Card,
-  Page,
-  Layout,
-  TextContainer,
-  Image,
-  Stack,
-  Link,
-  Heading,
-} from "@shopify/polaris";
-import { TitleBar } from "@shopify/app-bridge-react";
-
-import { trophyImage } from "../assets";
-
-import { ProductsCard } from "../components";
+import { Card, Page, Layout, Button, MediaCard } from "@shopify/polaris";
+import { ResourcePicker, TitleBar } from "@shopify/app-bridge-react";
+import { useState } from "react";
 
 export default function HomePage() {
+  const [show, setShow] = useState(false);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [images, setImages] = useState([]);
+  const ProductInfo = ({ title, description, images }) => {
+    // const desc = <div dangerouslySetInnerHTML={{__html: description}} />
+    // console.log(images);
+    return (
+      <MediaCard
+        title={title}
+        description={<div dangerouslySetInnerHTML={{ __html: description }} />}
+      >
+        <img
+          alt=""
+          width="100%"
+          height="300px"
+          style={{
+            objectFit: "cover",
+            objectPosition: "center",
+            margin: "auto",
+          }}
+          src={images[0].originalSrc}
+        />
+      </MediaCard>
+    );
+  };
+  const handleSelection = (resource) => {
+    const selectedProduct = resource.selection[0];
+    console.log(selectedProduct.images);
+    setShow(false);
+    setImages(selectedProduct.images);
+    setTitle(selectedProduct.title);
+    setDescription(selectedProduct.descriptionHtml);
+  };
   return (
-    <Page narrowWidth>
+    <Page fullWidth>
       <TitleBar title="Hopiant Sample App" primaryAction={null} />
       <Layout>
         <Layout.Section>
-          <Card sectioned>
-            <Stack
-              wrap={false}
-              spacing="extraTight"
-              distribution="trailing"
-              alignment="center"
-            >
-              <Stack.Item fill>
-                <TextContainer spacing="loose">
-                  <Heading>Nice work on building a Shopify app 🎉</Heading>
-                  <p>
-                    Your app is ready to explore! It contains everything you
-                    need to get started including the{" "}
-                    <Link url="https://polaris.shopify.com/" external>
-                      Polaris design system
-                    </Link>
-                    ,{" "}
-                    <Link url="https://shopify.dev/api/admin-graphql" external>
-                      Shopify Admin API
-                    </Link>
-                    , and{" "}
-                    <Link
-                      url="https://shopify.dev/apps/tools/app-bridge"
-                      external
-                    >
-                      App Bridge
-                    </Link>{" "}
-                    UI library and components.
-                  </p>
-                  <p>
-                    Ready to go? Start populating your app with some sample
-                    products to view and test in your store.{" "}
-                  </p>
-                  <p>
-                    Learn more about building out your app in{" "}
-                    <Link
-                      url="https://shopify.dev/apps/getting-started/add-functionality"
-                      external
-                    >
-                      this Shopify tutorial
-                    </Link>{" "}
-                    📚{" "}
-                  </p>
-                </TextContainer>
-              </Stack.Item>
-              <Stack.Item>
-                <div style={{ padding: "0 20px" }}>
-                  <Image
-                    source={trophyImage}
-                    alt="Nice work on building a Shopify app"
-                    width={120}
-                  />
-                </div>
-              </Stack.Item>
-            </Stack>
-          </Card>
+          <Button onClick={() => setShow(true)} style={{ width: "100%" }}>
+            Add product
+          </Button>
         </Layout.Section>
-        <Layout.Section>
-          <ProductsCard />
-        </Layout.Section>
+        <ResourcePicker
+          resourceType="Product"
+          open={show}
+          onCancel={() => setShow(false)}
+          onSelection={handleSelection}
+          selectMultiple={false}
+        />
+        {title != "" && (
+          <ProductInfo
+            title={title}
+            description={description}
+            images={images}
+          />
+        )}
       </Layout>
     </Page>
   );
