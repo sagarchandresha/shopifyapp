@@ -22,7 +22,7 @@ const DEV_INDEX_PATH = `${process.cwd()}/frontend/`;
 const PROD_INDEX_PATH = `${process.cwd()}/frontend/dist/`;
 
 const DB_PATH = `${process.cwd()}/database.sqlite`;
-
+console.log(DB_PATH)
 Shopify.Context.initialize({
   API_KEY: process.env.SHOPIFY_API_KEY,
   API_SECRET_KEY: process.env.SHOPIFY_API_SECRET,
@@ -172,10 +172,12 @@ export async function createServer(
     }
 
     const appInstalled = await AppInstallations.includes(shop);
-
+    console.log(encodeURIComponent(shop));
     if (shop && !appInstalled) {
+      // console.log("authhh");
       res.redirect(`/api/auth?shop=${encodeURIComponent(shop)}`);
     } else {
+      // console.log("not auth");
       const fs = await import("fs");
       const fallbackFile = join(
         isProd ? PROD_INDEX_PATH : DEV_INDEX_PATH,
