@@ -25,7 +25,7 @@ export default function applyAuthMiddleware(
       req,
       res,
       shop,
-      "/api/auth/callback",
+      "api/auth/callback",
       app.get("use-online-tokens")
     );
 
