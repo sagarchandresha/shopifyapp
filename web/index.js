@@ -1,5 +1,5 @@
 // @ts-check
-import { join } from "path";
+import path, { join } from "path";
 import fs from "fs";
 import express from "express";
 import cookieParser from "cookie-parser";
@@ -20,8 +20,8 @@ const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
 // TODO: There should be provided by env vars
 // const DEV_INDEX_PATH = `${process.cwd()}/frontend/`;
 // const PROD_INDEX_PATH = `${process.cwd()}/frontend/dist/`;
-const DEV_INDEX_PATH = "/frontend/";
-const PROD_INDEX_PATH = "/frontend/dist/";
+const DEV_INDEX_PATH = `${path.join(__dirname, "/frontend/")}`;
+const PROD_INDEX_PATH = `${path.join(__dirname, "/frontend/dist/")}`;
 
 const DB_PATH = `${process.cwd()}/database.sqlite`;
 console.log(DB_PATH)
