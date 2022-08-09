@@ -14,7 +14,8 @@
   },
   "dependencies": {
     "@shopify/app": "3.5.0",
-    "@shopify/cli": "3.5.0"
+    "@shopify/cli": "3.5.0",
+    "cross-env": "^7.0.3"
   },
   "author": "star"
 }
