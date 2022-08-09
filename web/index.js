@@ -177,12 +177,12 @@ export async function createServer(
       // console.log("authhh");
       res.redirect(`/api/auth?shop=${encodeURIComponent(shop)}`);
     } else {
-      // console.log("not auth");
       const fs = await import("fs");
       const fallbackFile = join(
         isProd ? PROD_INDEX_PATH : DEV_INDEX_PATH,
         "index.html"
-      );
+        );
+        console.log(fallbackFile);
       res
         .status(200)
         .set("Content-Type", "text/html")
