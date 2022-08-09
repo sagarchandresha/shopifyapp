@@ -7,6 +7,7 @@
     "shopify": "shopify",
     "build": "shopify app build",
     "dev": "shopify app dev",
+    "start": "cross-env NODE_ENV=production node ./web/index.js",
     "info": "shopify app info",
     "scaffold": "shopify app scaffold",
     "deploy": "shopify app deploy"
