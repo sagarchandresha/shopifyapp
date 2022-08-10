@@ -21,7 +21,7 @@ const PORT = parseInt(process.env.BACKEND_PORT || process.env.PORT, 10);
 // const DEV_INDEX_PATH = `${process.cwd()}/frontend/`;
 // const PROD_INDEX_PATH = `${process.cwd()}/frontend/dist/`;
 const DEV_INDEX_PATH = `${process.cwd()}/web/frontend/`;
-const PROD_INDEX_PATH = `${process.cwd()}/web/frontend/`;
+const PROD_INDEX_PATH = `${process.cwd()}/web/frontend/dist/`;
 
 const DB_PATH = `${process.cwd()}/database.sqlite`;
 console.log(DB_PATH)
