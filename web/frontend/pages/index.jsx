@@ -1,65 +1,78 @@
-import { Card, Page, Layout, Button, MediaCard } from "@shopify/polaris";
-import { ResourcePicker, TitleBar } from "@shopify/app-bridge-react";
-import { useState } from "react";
+import { useNavigate, TitleBar, Loading } from "@shopify/app-bridge-react";
+import { QRCodeIndex } from "../components";
+import {
+  Card,
+  EmptyState,
+  Layout,
+  Page,
+  SkeletonBodyText,
+} from "@shopify/polaris";
+import { useAppQuery } from "../hooks";
 
 export default function HomePage() {
-  const [show, setShow] = useState(false);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [images, setImages] = useState([]);
-  const ProductInfo = ({ title, description, images }) => {
-    // const desc = <div dangerouslySetInnerHTML={{__html: description}} />
-    // console.log(images);
-    return (
-      <MediaCard
-        title={title}
-        description={<div dangerouslySetInnerHTML={{ __html: description }} />}
-      >
-        <img
-          alt=""
-          width="100%"
-          height="300px"
-          style={{
-            objectFit: "cover",
-            objectPosition: "center",
-            margin: "auto",
+  const navigate = useNavigate();
+  /* useAppQuery wraps react-query and the App Bridge authenticatedFetch function */
+  const {
+    data: QRCodes,
+    isLoading,
+
+    /*
+    react-query provides stale-while-revalidate caching.
+    By passing isRefetching to Index Tables we can show stale data and a loading state.
+    Once the query refetches, IndexTable updates and the loading state is removed.
+    This ensures a performant UX.
+  */
+    isRefetching,
+  } = useAppQuery({
+    url: "/api/qrcodes",
+  });
+
+  /* Set the QR codes to use in the list */
+  const qrCodesMarkup = QRCodes?.length ? (
+    <QRCodeIndex QRCodes={QRCodes} loading={isRefetching} />
+  ) : null;
+
+  const loadingMarkup = isLoading ? (
+    <Card sectioned>
+      <Loading />
+      <SkeletonBodyText />
+    </Card>
+  ) : null;
+
+  const emptyStateMarkup =
+    !isLoading && !QRCodes?.length ? (
+      <Card sectioned>
+        <EmptyState
+          heading="Create unique QR codes for your product"
+          action={{
+            content: "Create QR code",
+            onAction: () => navigate("/qrcodes/new"),
           }}
-          src={images[0].originalSrc}
-        />
-      </MediaCard>
-    );
-  };
-  const handleSelection = (resource) => {
-    const selectedProduct = resource.selection[0];
-    console.log(selectedProduct.images);
-    setShow(false);
-    setImages(selectedProduct.images);
-    setTitle(selectedProduct.title);
-    setDescription(selectedProduct.descriptionHtml);
-  };
+          image="https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"
+          fullWidth
+        >
+          <p>
+            Allow customers to scan codes and buy products using their phones.
+          </p>
+        </EmptyState>
+      </Card>
+    ) : null;
+
   return (
-    <Page fullWidth>
-      <TitleBar title="Hopiant Sample App" primaryAction={null} />
+    <Page fullWidth={!!qrCodesMarkup}>
+      <TitleBar
+        title="QR codes"
+        primaryAction={{
+          content: "Create QR code",
+          onAction: () => navigate("/qrcodes/new"),
+        }}
+      />
       <Layout>
         <Layout.Section>
-          <Button onClick={() => setShow(true)} style={{ width: "100%" }}>
-            Add product
-          </Button>
+          {loadingMarkup}
+          {qrCodesMarkup}
+          {emptyStateMarkup}
         </Layout.Section>
-        <ResourcePicker
-          resourceType="Product"
-          open={show}
-          onCancel={() => setShow(false)}
-          onSelection={handleSelection}
-          selectMultiple={false}
-        />
-        {title != "" && (
-          <ProductInfo
-            title={title}
-            description={description}
-            images={images}
-          />
-        )}
       </Layout>
     </Page>
   );

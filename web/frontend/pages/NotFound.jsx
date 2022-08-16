@@ -1,7 +1,9 @@
-import { Card, EmptyState, Page } from "@shopify/polaris";
+import { useNavigate } from "@shopify/app-bridge-react";
+import { Button, Card, EmptyState, Link, Page } from "@shopify/polaris";
 import { notFoundImage } from "../assets";
 
 export default function NotFound() {
+  const navigate = useNavigate();
   return (
     <Page>
       <Card>
@@ -15,6 +17,7 @@ export default function NotFound() {
               you need.
             </p>
           </EmptyState>
+          <Link onClick={() =>  navigate("/")}>Go Back</Link>
         </Card.Section>
       </Card>
     </Page>
